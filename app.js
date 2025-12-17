@@ -436,6 +436,12 @@ function updateMonthlySummary() {
     document.getElementById('month-income').textContent = `¥${monthIncome.toFixed(2)}`;
 }
 
+// 注册 Service Worker
+if ('serviceWorker' in navigator) {
+    navigator.serviceWorker.register('/service-worker.js')
+        .then(() => console.log('✅ Service Worker 注册成功'))
+        .catch(err => console.log('❌ Service Worker 注册失败:', err));
+}
 
 
 // ==================== 结束 ====================
