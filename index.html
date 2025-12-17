@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>智能记账</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <!-- 顶部标题栏 -->
+    <header class="app-header">
+        <h1 id="page-title">记一笔</h1>
+    </header>
+
+    <!-- 主内容区域 -->
+    <main class="app-main">
+        
+        <!-- ========== 页面 1：记账表单 ========== -->
+        <div id="page-add" class="page active">
+            
+            <!-- 收入/支出切换 -->
+            <div class="type-toggle">
+                <button class="type-btn active" data-type="支出">支出</button>
+                <button class="type-btn" data-type="收入">收入</button>
+            </div>
+
+            <!-- 金额输入 -->
+            <div class="amount-section">
+                <div class="amount-label">金额</div>
+                <div class="amount-input-wrapper">
+                    <span class="currency">¥</span>
+                    <input type="number" id="amount-input" class="amount-input" placeholder="0.00" step="0.01">
+                </div>
+            </div>
+
+            <!-- 分类选择 -->
+            <div class="category-section">
+                <div class="section-title">分类</div>
+                <div class="category-grid" id="category-grid">
+                    <!-- 分类按钮会由 JavaScript 动态生成 -->
+                </div>
+            </div>
+
+            <!-- 备注输入 -->
+            <div class="note-section">
+                <div class="section-title">备注</div>
+                <input type="text" id="note-input" class="note-input" placeholder="添加备注（可选）">
+            </div>
+
+            <!-- 保存按钮 -->
+            <button id="save-btn" class="save-btn">保存</button>
+        </div>
+
+        <!-- ========== 页面 2：账单列表 ========== -->
+        <div id="page-list" class="page">
+            
+            <!-- 月度汇总卡片 -->
+            <div class="summary-card">
+                <div class="summary-item">
+                    <div class="summary-label">本月支出</div>
+                    <div class="summary-value expense" id="month-expense">¥0.00</div>
+                </div>
+                <div class="summary-item">
+                    <div class="summary-label">本月收入</div>
+                    <div class="summary-value income" id="month-income">¥0.00</div>
+                </div>
+            </div>
+
+            <!-- 账单列表 -->
+            <div class="record-list" id="record-list">
+                <!-- 记录会由 JavaScript 动态生成 -->
+            </div>
+
+            <!-- 空状态提示 -->
+            <div class="empty-state" id="empty-state">
+                <div class="empty-icon">📝</div>
+                <div class="empty-text">还没有记账记录哦</div>
+                <div class="empty-hint">点击底部「记账」开始吧～</div>
+            </div>
+        </div>
+
+    </main>
+
+    <!-- 底部导航栏 -->
+    <nav class="app-nav">
+        <button class="nav-btn active" data-page="add">
+            <span class="nav-icon">✏️</span>
+            <span class="nav-label">记账</span>
+        </button>
+        <button class="nav-btn" data-page="list">
+            <span class="nav-icon">📋</span>
+            <span class="nav-label">账单</span>
+        </button>
+    </nav>
+
+    <!-- 引入 JavaScript -->
+    <script src="app.js"></script>
+</body>
+</html>
