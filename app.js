@@ -1,6 +1,5 @@
 // ==================== 全局变量 ====================
 
-// 默认分类配置（主人可以在这里修改分类）
 const defaultCategories = {
     '支出': [
         { name: '餐饮', emoji: '🍜' },
@@ -18,64 +17,58 @@ const defaultCategories = {
     ]
 };
 
-// 当前选中的状态
-let currentType = '支出'; // 当前收支类型
-let currentCategory = '餐饮'; // 当前分类
+let currentType = '支出';
+let currentCategory = '餐饮';
 
 // ==================== 模块 A：初始化 ====================
 
-// 页面加载完成后执行
 document.addEventListener('DOMContentLoaded', function() {
     console.log('✅ 应用初始化中...');
     
-    // 初始化分类按钮
     renderCategories();
-    
-    // 检查 URL 参数（从快捷指令传来的数据）
     checkUrlParams();
-    
-    // 绑定事件监听
     bindEvents();
-    
-    // 渲染账单列表
     renderRecordList();
-    
-    // 更新月度汇总
     updateMonthlySummary();
+    
+    if (typeof cloudSync !== 'undefined' && cloudSync.syncEnabled) {
+        cloudSync.autoSync().then(() => {
+            renderRecordList();
+            updateMonthlySummary();
+            console.log('☁️ 云端同步完成');
+        });
+    }
+    
+    setTimeout(() => {
+        tryReadClipboard();
+    }, 500);
     
     console.log('✅ 应用初始化完成！');
 });
 
 // ==================== 模块 B：URL 参数处理 ====================
 
-// 功能：读取 URL 参数，自动填充表单
-// 快捷指令会通过 URL 传递参数，例如：
-// https://xxx.github.io?amount=128.5&type=支出&note=午饭
 function checkUrlParams() {
     const params = new URLSearchParams(window.location.search);
     
-    // 读取金额
     const amount = params.get('amount');
     if (amount) {
         document.getElementById('amount-input').value = amount;
         console.log('📥 从URL读取金额:', amount);
     }
     
-    // 读取类型
     const type = params.get('type');
     if (type && (type === '支出' || type === '收入')) {
         switchType(type);
         console.log('📥 从URL读取类型:', type);
     }
     
-    // 读取备注
     const note = params.get('note');
     if (note) {
         document.getElementById('note-input').value = note;
         console.log('📥 从URL读取备注:', note);
     }
     
-    // 读取分类
     const category = params.get('category');
     if (category) {
         currentCategory = category;
@@ -86,10 +79,9 @@ function checkUrlParams() {
 
 // ==================== 模块 C：分类渲染 ====================
 
-// 功能：根据当前类型渲染分类按钮
 function renderCategories() {
     const grid = document.getElementById('category-grid');
-    grid.innerHTML = ''; // 清空
+    grid.innerHTML = '';
     
     const categories = defaultCategories[currentType];
     
@@ -98,7 +90,6 @@ function renderCategories() {
         btn.className = 'category-btn';
         btn.dataset.category = cat.name;
         
-        // 如果是当前选中的分类，添加 active 类
         if (cat.name === currentCategory) {
             btn.classList.add('active');
         }
@@ -108,7 +99,6 @@ function renderCategories() {
             <span class="label">${cat.name}</span>
         `;
         
-        // 点击事件
         btn.addEventListener('click', () => {
             currentCategory = cat.name;
             highlightCategory(cat.name);
@@ -118,7 +108,6 @@ function renderCategories() {
     });
 }
 
-// 高亮当前选中的分类
 function highlightCategory(categoryName) {
     document.querySelectorAll('.category-btn').forEach(btn => {
         btn.classList.remove('active');
@@ -131,7 +120,6 @@ function highlightCategory(categoryName) {
 // ==================== 模块 D：事件绑定 ====================
 
 function bindEvents() {
-    // 收入/支出切换按钮
     document.querySelectorAll('.type-btn').forEach(btn => {
         btn.addEventListener('click', () => {
             const type = btn.dataset.type;
@@ -139,10 +127,8 @@ function bindEvents() {
         });
     });
     
-    // 保存按钮
     document.getElementById('save-btn').addEventListener('click', saveRecord);
     
-    // 底部导航切换
     document.querySelectorAll('.nav-btn').forEach(btn => {
         btn.addEventListener('click', () => {
             const pageName = btn.dataset.page;
@@ -156,7 +142,6 @@ function bindEvents() {
 function switchType(type) {
     currentType = type;
     
-    // 更新按钮状态
     document.querySelectorAll('.type-btn').forEach(btn => {
         btn.classList.remove('active');
         if (btn.dataset.type === type) {
@@ -164,23 +149,19 @@ function switchType(type) {
         }
     });
     
-    // 切换分类列表（支出和收入的分类不同）
-    currentCategory = defaultCategories[type][0].name; // 默认选第一个
+    currentCategory = defaultCategories[type][0].name;
     renderCategories();
 }
 
 // ==================== 模块 F：页面切换 ====================
 
 function switchPage(pageName) {
-    // 隐藏所有页面
     document.querySelectorAll('.page').forEach(page => {
         page.classList.remove('active');
     });
     
-    // 显示目标页面
     document.getElementById('page-' + pageName).classList.add('active');
     
-    // 更新导航栏状态
     document.querySelectorAll('.nav-btn').forEach(btn => {
         btn.classList.remove('active');
         if (btn.dataset.page === pageName) {
@@ -188,23 +169,21 @@ function switchPage(pageName) {
         }
     });
     
-    // 更新标题
     const titles = {
         'add': '记一笔',
-        'list': '账单'
+        'list': '账单',
+        'settings': '设置'
     };
     document.getElementById('page-title').textContent = titles[pageName];
     
-    // 如果切换到列表页，刷新数据
     if (pageName === 'list') {
         renderRecordList();
         updateMonthlySummary();
     }
 }
 
-// ==================== 模块 G：保存记录和云端同步 ====================
+// ==================== 模块 G：保存记录 ====================
 
-// 修改后的 saveRecord 函数
 function saveRecord() {
     const amount = parseFloat(document.getElementById('amount-input').value);
     const note = document.getElementById('note-input').value.trim();
@@ -233,7 +212,6 @@ function saveRecord() {
     
     console.log('✅ 记录已保存:', record);
     
-    // ⭐ 新增：自动上传到云端
     if (typeof cloudSync !== 'undefined' && cloudSync.syncEnabled) {
         cloudSync.uploadData(getRecordsFromStorage(), getCustomCategories())
             .then(result => {
@@ -244,44 +222,19 @@ function saveRecord() {
     }
 }
 
-// 修改后的初始化
-document.addEventListener('DOMContentLoaded', function() {
-    console.log('✅ 应用初始化中...');
-    
-    renderCategories();
-    checkUrlParams();
-    bindEvents();
-    renderRecordList();
-    updateMonthlySummary();
-    
-    // ⭐ 新增：从云端同步数据
-    if (typeof cloudSync !== 'undefined' && cloudSync.syncEnabled) {
-        cloudSync.autoSync().then(() => {
-            renderRecordList();
-            updateMonthlySummary();
-            console.log('☁️ 云端同步完成');
-        });
-    }
-    
-    console.log('✅ 应用初始化完成！');
-});
-
 // ==================== 模块 H：本地存储操作 ====================
 
-// 保存记录到 LocalStorage
 function saveToStorage(record) {
     let records = getRecordsFromStorage();
     records.push(record);
     localStorage.setItem('accounting_records', JSON.stringify(records));
 }
 
-// 从 LocalStorage 读取所有记录
 function getRecordsFromStorage() {
     const data = localStorage.getItem('accounting_records');
     return data ? JSON.parse(data) : [];
 }
 
-// 删除记录
 function deleteRecord(id) {
     if (!confirm('确定要删除这条记录吗？')) {
         return;
@@ -291,11 +244,15 @@ function deleteRecord(id) {
     records = records.filter(r => r.id !== id);
     localStorage.setItem('accounting_records', JSON.stringify(records));
     
-    // 刷新列表
     renderRecordList();
     updateMonthlySummary();
     
     console.log('🗑️ 记录已删除:', id);
+}
+
+function getCustomCategories() {
+    const data = localStorage.getItem('custom_categories');
+    return data ? JSON.parse(data) : [];
 }
 
 // ==================== 模块 I：账单列表渲染 ====================
@@ -305,7 +262,6 @@ function renderRecordList() {
     const emptyState = document.getElementById('empty-state');
     const records = getRecordsFromStorage();
     
-    // 如果没有记录，显示空状态
     if (records.length === 0) {
         container.innerHTML = '';
         emptyState.classList.add('show');
@@ -314,20 +270,16 @@ function renderRecordList() {
     
     emptyState.classList.remove('show');
     
-    // 按日期分组
     const groupedRecords = groupByDate(records);
     
-    // 渲染
     container.innerHTML = '';
     
     Object.keys(groupedRecords).forEach(date => {
         const group = groupedRecords[date];
         
-        // 计算当天总支出/收入
         const dayExpense = group.filter(r => r.type === '支出').reduce((sum, r) => sum + r.amount, 0);
         const dayIncome = group.filter(r => r.type === '收入').reduce((sum, r) => sum + r.amount, 0);
         
-        // 创建日期分组
         const dateGroupDiv = document.createElement('div');
         dateGroupDiv.className = 'date-group';
         
@@ -340,7 +292,6 @@ function renderRecordList() {
             </div>
         `;
         
-        // 渲染当天的记录
         group.forEach(record => {
             const item = createRecordItem(record);
             dateGroupDiv.appendChild(item);
@@ -350,12 +301,10 @@ function renderRecordList() {
     });
 }
 
-// 创建单条记录的 DOM 元素
 function createRecordItem(record) {
     const div = document.createElement('div');
     div.className = 'record-item';
     
-    // 获取分类 emoji
     const categoryData = defaultCategories[record.type].find(c => c.name === record.category);
     const emoji = categoryData ? categoryData.emoji : '📦';
     
@@ -376,15 +325,13 @@ function createRecordItem(record) {
 
 // ==================== 模块 J：数据分组与统计 ====================
 
-// 按日期分组记录
 function groupByDate(records) {
     const grouped = {};
     
-    // 按日期倒序排序
     records.sort((a, b) => new Date(b.date) - new Date(a.date));
     
     records.forEach(record => {
-        const date = record.date.split('T')[0]; // 提取日期部分 YYYY-MM-DD
+        const date = record.date.split('T')[0];
         if (!grouped[date]) {
             grouped[date] = [];
         }
@@ -394,7 +341,6 @@ function groupByDate(records) {
     return grouped;
 }
 
-// 格式化日期标签
 function formatDateLabel(dateStr) {
     const date = new Date(dateStr);
     const today = new Date();
@@ -414,26 +360,96 @@ function formatDateLabel(dateStr) {
     }
 }
 
-// 更新月度汇总
 function updateMonthlySummary() {
     const records = getRecordsFromStorage();
     const now = new Date();
     const currentMonth = now.getMonth();
     const currentYear = now.getFullYear();
     
-    // 筛选本月记录
     const monthRecords = records.filter(r => {
         const recordDate = new Date(r.date);
         return recordDate.getMonth() === currentMonth && recordDate.getFullYear() === currentYear;
     });
     
-    // 计算总支出和总收入
     const monthExpense = monthRecords.filter(r => r.type === '支出').reduce((sum, r) => sum + r.amount, 0);
     const monthIncome = monthRecords.filter(r => r.type === '收入').reduce((sum, r) => sum + r.amount, 0);
     
-    // 更新界面
     document.getElementById('month-expense').textContent = `¥${monthExpense.toFixed(2)}`;
     document.getElementById('month-income').textContent = `¥${monthIncome.toFixed(2)}`;
+}
+
+// ==================== 模块 K：剪贴板处理 ====================
+
+async function tryReadClipboard() {
+    if (!navigator.clipboard || !navigator.clipboard.readText) {
+        console.log('⚠️ 浏览器不支持剪贴板 API');
+        return;
+    }
+    
+    try {
+        const text = await navigator.clipboard.readText();
+        
+        if (!text || text.length === 0) {
+            console.log('📋 剪贴板为空');
+            return;
+        }
+        
+        console.log('📋 读取到剪贴板内容:', text);
+        
+        const lastProcessed = localStorage.getItem('last_clipboard_text');
+        if (lastProcessed === text) {
+            console.log('⚠️ 剪贴板内容已处理过，跳过');
+            return;
+        }
+        
+        const result = smartParser.parse(text);
+        
+        if (result.success) {
+            autoFillForm(result);
+            localStorage.setItem('last_clipboard_text', text);
+            showToast('✅ 已自动识别金额和分类，请确认后保存～');
+        } else {
+            console.log('⚠️ 无法从剪贴板内容中提取有效信息');
+        }
+        
+    } catch (error) {
+        console.log('⚠️ 读取剪贴板失败:', error.message);
+    }
+}
+
+function autoFillForm(data) {
+    if (data.type) {
+        switchType(data.type);
+    }
+    
+    if (data.amount) {
+        document.getElementById('amount-input').value = data.amount;
+    }
+    
+    if (data.category) {
+        currentCategory = data.category;
+        highlightCategory(data.category);
+    }
+    
+    if (data.note) {
+        document.getElementById('note-input').value = data.note;
+    }
+    
+    document.getElementById('amount-input').focus();
+    
+    console.log('✅ 表单已自动填充:', data);
+}
+
+function showToast(message) {
+    const toast = document.createElement('div');
+    toast.className = 'toast';
+    toast.textContent = message;
+    document.body.appendChild(toast);
+    
+    setTimeout(() => {
+        toast.classList.add('fade-out');
+        setTimeout(() => toast.remove(), 300);
+    }, 3000);
 }
 
 // 注册 Service Worker
@@ -442,8 +458,5 @@ if ('serviceWorker' in navigator) {
         .then(() => console.log('✅ Service Worker 注册成功'))
         .catch(err => console.log('❌ Service Worker 注册失败:', err));
 }
-
-
-// ==================== 结束 ====================
 
 console.log('📱 智能记账 APP - By 安然');
