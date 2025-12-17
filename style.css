@@ -476,3 +476,106 @@ input[type="number"] {
     color: var(--primary);
     font-weight: 600;
 }
+
+
+/* ==================== 设置页样式 ==================== */
+
+.settings-section {
+    margin-bottom: 24px;
+}
+
+.settings-card {
+    background: var(--card-bg);
+    border-radius: var(--border-radius);
+    padding: 20px;
+}
+
+.setting-item {
+    margin-bottom: 16px;
+}
+
+.setting-item:last-child {
+    margin-bottom: 0;
+}
+
+.setting-label {
+    font-size: 14px;
+    color: var(--text-secondary);
+    margin-bottom: 8px;
+}
+
+.setting-value {
+    font-size: 16px;
+    font-weight: 500;
+    color: var(--primary);
+}
+
+.setting-input {
+    width: 100%;
+    border: 1px solid var(--border);
+    background: var(--background);
+    border-radius: 8px;
+    padding: 12px;
+    font-size: 14px;
+    color: var(--text-primary);
+    outline: none;
+    transition: border-color 0.3s ease;
+}
+
+.setting-input:focus {
+    border-color: var(--primary);
+}
+
+.setting-btn {
+    width: 100%;
+    height: 44px;
+    border: none;
+    border-radius: 8px;
+    font-size: 14px;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    margin-top: 12px;
+}
+
+.setting-btn:first-of-type {
+    margin-top: 0;
+}
+
+.setting-btn {
+    background: var(--primary);
+    color: white;
+}
+
+.setting-btn.secondary {
+    background: var(--background);
+    color: var(--text-primary);
+    border: 1px solid var(--border);
+}
+
+.setting-btn.danger {
+    background: var(--card-bg);
+    color: var(--expense);
+    border: 1px solid var(--expense);
+}
+
+.setting-btn:active {
+    transform: scale(0.98);
+}
+
+.setting-hint {
+    background: #FFF3E0;
+    border-left: 4px solid #FF9800;
+    border-radius: 4px;
+    padding: 16px;
+    margin-top: 16px;
+    font-size: 13px;
+    line-height: 1.8;
+    color: var(--text-primary);
+}
+
+.about-text {
+    text-align: center;
+    color: var(--text-secondary);
+    line-height: 1.8;
+}
