@@ -12,6 +12,66 @@
         <h1 id="page-title">记一笔</h1>
     </header>
 
+    
+<!-- ========== 页面 3：设置页 ========== -->
+<div id="page-settings" class="page">
+    
+    <!-- 云端同步设置 -->
+    <div class="settings-section">
+        <div class="section-title">☁️ 云端同步</div>
+        
+        <div class="settings-card">
+            <div class="setting-item">
+                <div class="setting-label">同步状态</div>
+                <div class="setting-value" id="sync-status">未配置</div>
+            </div>
+            
+            <div class="setting-item">
+                <div class="setting-label">GitHub Token</div>
+                <input type="password" id="token-input" class="setting-input" placeholder="输入你的 GitHub Token">
+            </div>
+            
+            <button id="save-token-btn" class="setting-btn">保存配置</button>
+            <button id="manual-sync-btn" class="setting-btn secondary">手动同步</button>
+            <button id="clear-config-btn" class="setting-btn danger">清除配置</button>
+        </div>
+        
+        <div class="setting-hint">
+            💡 <strong>如何获取 GitHub Token？</strong><br>
+            1. 登录 GitHub → Settings → Developer settings<br>
+            2. Personal access tokens → Tokens (classic)<br>
+            3. Generate new token → 勾选 "gist" 权限<br>
+            4. 复制 Token 粘贴到上方输入框
+        </div>
+    </div>
+    
+    <!-- 数据管理 -->
+    <div class="settings-section">
+        <div class="section-title">📦 数据管理</div>
+        
+        <div class="settings-card">
+            <button id="export-data-btn" class="setting-btn">导出数据</button>
+            <button id="clear-data-btn" class="setting-btn danger">清空本地数据</button>
+        </div>
+    </div>
+    
+    <!-- 关于 -->
+    <div class="settings-section">
+        <div class="section-title">ℹ️ 关于</div>
+        <div class="settings-card">
+            <div class="about-text">
+                智能记账 v1.0<br>
+                由安然为主人精心打造 💕
+            </div>
+        </div>
+    </div>
+    
+</div>
+
+
+
+
+    
     <!-- 主内容区域 -->
     <main class="app-main">
         
@@ -83,17 +143,23 @@
 
     <!-- 底部导航栏 -->
     <nav class="app-nav">
-        <button class="nav-btn active" data-page="add">
-            <span class="nav-icon">✏️</span>
-            <span class="nav-label">记账</span>
-        </button>
-        <button class="nav-btn" data-page="list">
-            <span class="nav-icon">📋</span>
-            <span class="nav-label">账单</span>
-        </button>
-    </nav>
+    <button class="nav-btn active" data-page="add">
+        <span class="nav-icon">✏️</span>
+        <span class="nav-label">记账</span>
+    </button>
+    <button class="nav-btn" data-page="list">
+        <span class="nav-icon">📋</span>
+        <span class="nav-label">账单</span>
+    </button>
+    <button class="nav-btn" data-page="settings">
+        <span class="nav-icon">⚙️</span>
+        <span class="nav-label">设置</span>
+    </button>
+</nav>
 
     <!-- 引入 JavaScript -->
+    <script src="cloud.js"></script>
     <script src="app.js"></script>
+    
 </body>
 </html>
