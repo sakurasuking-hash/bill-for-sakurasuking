@@ -1,17 +1,15 @@
 /* ==================== 全局变量与重置 ==================== */
 
 :root {
-    /* 颜色变量 - 主人可以在这里改颜色 */
-    --primary: #2196F3;        /* 主色调：蓝色 */
-    --expense: #FF5722;        /* 支出：橙红色 */
-    --income: #4CAF50;         /* 收入：绿色 */
-    --background: #F5F5F5;     /* 背景：浅灰 */
-    --card-bg: #FFFFFF;        /* 卡片背景：白色 */
-    --text-primary: #212121;   /* 主要文字：深灰 */
-    --text-secondary: #757575; /* 次要文字：中灰 */
-    --border: #E0E0E0;         /* 边框：浅灰 */
+    --primary: #2196F3;
+    --expense: #FF5722;
+    --income: #4CAF50;
+    --background: #F5F5F5;
+    --card-bg: #FFFFFF;
+    --text-primary: #212121;
+    --text-secondary: #757575;
+    --border: #E0E0E0;
     
-    /* 尺寸变量 */
     --header-height: 56px;
     --nav-height: 60px;
     --border-radius: 12px;
@@ -64,7 +62,6 @@ body {
     padding: var(--spacing);
 }
 
-/* 页面切换 */
 .page {
     display: none;
 }
@@ -81,7 +78,6 @@ body {
 
 /* ==================== 记账表单页 ==================== */
 
-/* 收入/支出切换 */
 .type-toggle {
     display: flex;
     gap: 12px;
@@ -112,7 +108,6 @@ body {
     background: var(--income);
 }
 
-/* 金额输入区域 */
 .amount-section {
     background: var(--card-bg);
     border-radius: var(--border-radius);
@@ -152,7 +147,6 @@ body {
     color: var(--border);
 }
 
-/* 移除数字输入框的上下箭头 */
 input[type="number"]::-webkit-inner-spin-button,
 input[type="number"]::-webkit-outer-spin-button {
     -webkit-appearance: none;
@@ -163,7 +157,6 @@ input[type="number"] {
     -moz-appearance: textfield;
 }
 
-/* 分类选择区域 */
 .category-section {
     background: var(--card-bg);
     border-radius: var(--border-radius);
@@ -214,7 +207,6 @@ input[type="number"] {
     color: white;
 }
 
-/* 备注输入区域 */
 .note-section {
     background: var(--card-bg);
     border-radius: var(--border-radius);
@@ -238,7 +230,6 @@ input[type="number"] {
     border-color: var(--primary);
 }
 
-/* 保存按钮 */
 .save-btn {
     width: 100%;
     height: 50px;
@@ -260,7 +251,6 @@ input[type="number"] {
 
 /* ==================== 账单列表页 ==================== */
 
-/* 月度汇总卡片 */
 .summary-card {
     background: var(--card-bg);
     border-radius: var(--border-radius);
@@ -293,14 +283,12 @@ input[type="number"] {
     color: var(--income);
 }
 
-/* 账单列表 */
 .record-list {
     display: flex;
     flex-direction: column;
     gap: 8px;
 }
 
-/* 日期分组 */
 .date-group {
     margin-bottom: 16px;
 }
@@ -319,7 +307,6 @@ input[type="number"] {
     font-size: 12px;
 }
 
-/* 单条记录 */
 .record-item {
     background: var(--card-bg);
     border-radius: var(--border-radius);
@@ -383,7 +370,6 @@ input[type="number"] {
     content: '+';
 }
 
-/* 删除按钮 */
 .record-delete {
     background: none;
     border: none;
@@ -399,7 +385,6 @@ input[type="number"] {
     opacity: 1;
 }
 
-/* 空状态 */
 .empty-state {
     display: none;
     text-align: center;
@@ -427,56 +412,6 @@ input[type="number"] {
     color: var(--text-secondary);
     opacity: 0.7;
 }
-
-/* ==================== 底部导航栏 ==================== */
-
-.app-nav {
-    position: fixed;
-    bottom: 0;
-    left: 0;
-    right: 0;
-    height: var(--nav-height);
-    background: var(--card-bg);
-    display: flex;
-    box-shadow: 0 -2px 8px rgba(0, 0, 0, 0.08);
-    z-index: 100;
-}
-
-.nav-btn {
-    flex: 1;
-    border: none;
-    background: none;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    gap: 4px;
-    cursor: pointer;
-    transition: all 0.2s ease;
-}
-
-.nav-icon {
-    font-size: 24px;
-    opacity: 0.6;
-    transition: all 0.2s ease;
-}
-
-.nav-label {
-    font-size: 12px;
-    color: var(--text-secondary);
-    transition: all 0.2s ease;
-}
-
-.nav-btn.active .nav-icon {
-    opacity: 1;
-    transform: scale(1.1);
-}
-
-.nav-btn.active .nav-label {
-    color: var(--primary);
-    font-weight: 600;
-}
-
 
 /* ==================== 设置页样式 ==================== */
 
@@ -578,4 +513,94 @@ input[type="number"] {
     text-align: center;
     color: var(--text-secondary);
     line-height: 1.8;
+}
+
+/* ==================== 提示消息样式 ==================== */
+
+.toast {
+    position: fixed;
+    top: calc(var(--header-height) + 16px);
+    left: 50%;
+    transform: translateX(-50%);
+    background: rgba(33, 150, 243, 0.95);
+    color: white;
+    padding: 12px 24px;
+    border-radius: 24px;
+    font-size: 14px;
+    z-index: 1000;
+    animation: slideDown 0.3s ease;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+    max-width: 90%;
+    text-align: center;
+}
+
+.toast.fade-out {
+    animation: fadeOut 0.3s ease;
+    opacity: 0;
+}
+
+@keyframes slideDown {
+    from {
+        opacity: 0;
+        transform: translateX(-50%) translateY(-20px);
+    }
+    to {
+        opacity: 1;
+        transform: translateX(-50%) translateY(0);
+    }
+}
+
+@keyframes fadeOut {
+    to {
+        opacity: 0;
+    }
+}
+
+/* ==================== 底部导航栏 ==================== */
+
+.app-nav {
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    height: var(--nav-height);
+    background: var(--card-bg);
+    display: flex;
+    box-shadow: 0 -2px 8px rgba(0, 0, 0, 0.08);
+    z-index: 100;
+}
+
+.nav-btn {
+    flex: 1;
+    border: none;
+    background: none;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 4px;
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+
+.nav-icon {
+    font-size: 24px;
+    opacity: 0.6;
+    transition: all 0.2s ease;
+}
+
+.nav-label {
+    font-size: 12px;
+    color: var(--text-secondary);
+    transition: all 0.2s ease;
+}
+
+.nav-btn.active .nav-icon {
+    opacity: 1;
+    transform: scale(1.1);
+}
+
+.nav-btn.active .nav-label {
+    color: var(--primary);
+    font-weight: 600;
 }
