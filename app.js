@@ -202,44 +202,69 @@ function switchPage(pageName) {
     }
 }
 
-// ==================== 模块 G：保存记录 ====================
+// ==================== 模块 G：保存记录和云端同步 ====================
 
+// 修改后的 saveRecord 函数
 function saveRecord() {
-    // 获取表单数据
     const amount = parseFloat(document.getElementById('amount-input').value);
     const note = document.getElementById('note-input').value.trim();
     
-    // 验证金额
     if (!amount || amount <= 0) {
         alert('请输入正确的金额～');
         return;
     }
     
-    // 构建记录对象
     const record = {
-        id: Date.now(), // 用时间戳作为唯一 ID
+        id: Date.now(),
         type: currentType,
         category: currentCategory,
         amount: amount,
         note: note,
-        date: new Date().toISOString() // ISO 格式时间
+        date: new Date().toISOString()
     };
     
-    // 保存到本地存储
     saveToStorage(record);
-    
-    // 显示成功提示
     alert('记账成功！✅');
     
-    // 清空表单
     document.getElementById('amount-input').value = '';
     document.getElementById('note-input').value = '';
     
-    // 跳转到列表页
     switchPage('list');
     
     console.log('✅ 记录已保存:', record);
+    
+    // ⭐ 新增：自动上传到云端
+    if (typeof cloudSync !== 'undefined' && cloudSync.syncEnabled) {
+        cloudSync.uploadData(getRecordsFromStorage(), getCustomCategories())
+            .then(result => {
+                if (result.success) {
+                    console.log('☁️ 已同步到云端');
+                }
+            });
+    }
 }
+
+// 修改后的初始化
+document.addEventListener('DOMContentLoaded', function() {
+    console.log('✅ 应用初始化中...');
+    
+    renderCategories();
+    checkUrlParams();
+    bindEvents();
+    renderRecordList();
+    updateMonthlySummary();
+    
+    // ⭐ 新增：从云端同步数据
+    if (typeof cloudSync !== 'undefined' && cloudSync.syncEnabled) {
+        cloudSync.autoSync().then(() => {
+            renderRecordList();
+            updateMonthlySummary();
+            console.log('☁️ 云端同步完成');
+        });
+    }
+    
+    console.log('✅ 应用初始化完成！');
+});
 
 // ==================== 模块 H：本地存储操作 ====================
 
@@ -411,36 +436,6 @@ function updateMonthlySummary() {
     document.getElementById('month-income').textContent = `¥${monthIncome.toFixed(2)}`;
 }
 
-
-
-// ==================== 云端同步集成 ====================
-
-// 在保存记录后自动上传（修改原有的 saveRecord 函数）
-// 找到 saveRecord 函数中的这一行：
-// console.log('✅ 记录已保存:', record);
-// 在它后面添加：
-
-// 自动上传到云端
-if (typeof cloudSync !== 'undefined' && cloudSync.syncEnabled) {
-    cloudSync.uploadData(getRecordsFromStorage(), getCustomCategories())
-        .then(result => {
-            if (result.success) {
-                console.log('☁️ 已同步到云端');
-            }
-        });
-}
-
-// 页面加载时自动同步（修改 DOMContentLoaded 事件）
-// 找到 DOMContentLoaded 中的最后一行，在 console.log('✅ 应用初始化完成！'); 之前添加：
-
-// 从云端同步数据
-if (typeof cloudSync !== 'undefined' && cloudSync.syncEnabled) {
-    cloudSync.autoSync().then(() => {
-        renderRecordList();
-        updateMonthlySummary();
-        console.log('☁️ 云端同步完成');
-    });
-}
 
 
 // ==================== 结束 ====================
