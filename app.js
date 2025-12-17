@@ -411,6 +411,38 @@ function updateMonthlySummary() {
     document.getElementById('month-income').textContent = `¥${monthIncome.toFixed(2)}`;
 }
 
+
+
+// ==================== 云端同步集成 ====================
+
+// 在保存记录后自动上传（修改原有的 saveRecord 函数）
+// 找到 saveRecord 函数中的这一行：
+// console.log('✅ 记录已保存:', record);
+// 在它后面添加：
+
+// 自动上传到云端
+if (typeof cloudSync !== 'undefined' && cloudSync.syncEnabled) {
+    cloudSync.uploadData(getRecordsFromStorage(), getCustomCategories())
+        .then(result => {
+            if (result.success) {
+                console.log('☁️ 已同步到云端');
+            }
+        });
+}
+
+// 页面加载时自动同步（修改 DOMContentLoaded 事件）
+// 找到 DOMContentLoaded 中的最后一行，在 console.log('✅ 应用初始化完成！'); 之前添加：
+
+// 从云端同步数据
+if (typeof cloudSync !== 'undefined' && cloudSync.syncEnabled) {
+    cloudSync.autoSync().then(() => {
+        renderRecordList();
+        updateMonthlySummary();
+        console.log('☁️ 云端同步完成');
+    });
+}
+
+
 // ==================== 结束 ====================
 
 console.log('📱 智能记账 APP - By 安然');
