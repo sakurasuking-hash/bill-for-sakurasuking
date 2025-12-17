@@ -1,0 +1,478 @@
+/* ==================== 全局变量与重置 ==================== */
+
+:root {
+    /* 颜色变量 - 主人可以在这里改颜色 */
+    --primary: #2196F3;        /* 主色调：蓝色 */
+    --expense: #FF5722;        /* 支出：橙红色 */
+    --income: #4CAF50;         /* 收入：绿色 */
+    --background: #F5F5F5;     /* 背景：浅灰 */
+    --card-bg: #FFFFFF;        /* 卡片背景：白色 */
+    --text-primary: #212121;   /* 主要文字：深灰 */
+    --text-secondary: #757575; /* 次要文字：中灰 */
+    --border: #E0E0E0;         /* 边框：浅灰 */
+    
+    /* 尺寸变量 */
+    --header-height: 56px;
+    --nav-height: 60px;
+    --border-radius: 12px;
+    --spacing: 16px;
+}
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+    background: var(--background);
+    color: var(--text-primary);
+    font-size: 16px;
+    line-height: 1.5;
+    -webkit-font-smoothing: antialiased;
+    padding-top: var(--header-height);
+    padding-bottom: var(--nav-height);
+}
+
+/* ==================== 顶部标题栏 ==================== */
+
+.app-header {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: var(--header-height);
+    background: var(--card-bg);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.08);
+    z-index: 100;
+}
+
+.app-header h1 {
+    font-size: 18px;
+    font-weight: 600;
+    color: var(--text-primary);
+}
+
+/* ==================== 主内容区域 ==================== */
+
+.app-main {
+    min-height: calc(100vh - var(--header-height) - var(--nav-height));
+    padding: var(--spacing);
+}
+
+/* 页面切换 */
+.page {
+    display: none;
+}
+
+.page.active {
+    display: block;
+    animation: fadeIn 0.3s ease;
+}
+
+@keyframes fadeIn {
+    from { opacity: 0; transform: translateY(10px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+/* ==================== 记账表单页 ==================== */
+
+/* 收入/支出切换 */
+.type-toggle {
+    display: flex;
+    gap: 12px;
+    margin-bottom: 24px;
+}
+
+.type-btn {
+    flex: 1;
+    height: 44px;
+    border: 2px solid var(--border);
+    background: var(--card-bg);
+    border-radius: var(--border-radius);
+    font-size: 16px;
+    font-weight: 500;
+    color: var(--text-secondary);
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.type-btn.active {
+    border-color: var(--expense);
+    background: var(--expense);
+    color: white;
+}
+
+.type-btn[data-type="收入"].active {
+    border-color: var(--income);
+    background: var(--income);
+}
+
+/* 金额输入区域 */
+.amount-section {
+    background: var(--card-bg);
+    border-radius: var(--border-radius);
+    padding: 24px;
+    margin-bottom: 16px;
+}
+
+.amount-label {
+    font-size: 14px;
+    color: var(--text-secondary);
+    margin-bottom: 8px;
+}
+
+.amount-input-wrapper {
+    display: flex;
+    align-items: center;
+}
+
+.currency {
+    font-size: 32px;
+    font-weight: 600;
+    color: var(--text-primary);
+    margin-right: 8px;
+}
+
+.amount-input {
+    flex: 1;
+    border: none;
+    background: none;
+    font-size: 36px;
+    font-weight: 600;
+    color: var(--text-primary);
+    outline: none;
+}
+
+.amount-input::placeholder {
+    color: var(--border);
+}
+
+/* 移除数字输入框的上下箭头 */
+input[type="number"]::-webkit-inner-spin-button,
+input[type="number"]::-webkit-outer-spin-button {
+    -webkit-appearance: none;
+    margin: 0;
+}
+
+input[type="number"] {
+    -moz-appearance: textfield;
+}
+
+/* 分类选择区域 */
+.category-section {
+    background: var(--card-bg);
+    border-radius: var(--border-radius);
+    padding: 20px;
+    margin-bottom: 16px;
+}
+
+.section-title {
+    font-size: 14px;
+    font-weight: 500;
+    color: var(--text-secondary);
+    margin-bottom: 12px;
+}
+
+.category-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 12px;
+}
+
+.category-btn {
+    aspect-ratio: 1;
+    border: 2px solid var(--border);
+    background: var(--card-bg);
+    border-radius: var(--border-radius);
+    font-size: 14px;
+    color: var(--text-primary);
+    cursor: pointer;
+    transition: all 0.2s ease;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 4px;
+}
+
+.category-btn .emoji {
+    font-size: 24px;
+}
+
+.category-btn .label {
+    font-size: 12px;
+}
+
+.category-btn.active {
+    border-color: var(--primary);
+    background: var(--primary);
+    color: white;
+}
+
+/* 备注输入区域 */
+.note-section {
+    background: var(--card-bg);
+    border-radius: var(--border-radius);
+    padding: 20px;
+    margin-bottom: 16px;
+}
+
+.note-input {
+    width: 100%;
+    border: 1px solid var(--border);
+    background: var(--background);
+    border-radius: 8px;
+    padding: 12px;
+    font-size: 14px;
+    color: var(--text-primary);
+    outline: none;
+    transition: border-color 0.3s ease;
+}
+
+.note-input:focus {
+    border-color: var(--primary);
+}
+
+/* 保存按钮 */
+.save-btn {
+    width: 100%;
+    height: 50px;
+    background: var(--primary);
+    border: none;
+    border-radius: var(--border-radius);
+    font-size: 16px;
+    font-weight: 600;
+    color: white;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    box-shadow: 0 4px 12px rgba(33, 150, 243, 0.3);
+}
+
+.save-btn:active {
+    transform: scale(0.98);
+    box-shadow: 0 2px 8px rgba(33, 150, 243, 0.3);
+}
+
+/* ==================== 账单列表页 ==================== */
+
+/* 月度汇总卡片 */
+.summary-card {
+    background: var(--card-bg);
+    border-radius: var(--border-radius);
+    padding: 20px;
+    margin-bottom: 16px;
+    display: flex;
+    justify-content: space-around;
+}
+
+.summary-item {
+    text-align: center;
+}
+
+.summary-label {
+    font-size: 12px;
+    color: var(--text-secondary);
+    margin-bottom: 8px;
+}
+
+.summary-value {
+    font-size: 20px;
+    font-weight: 600;
+}
+
+.summary-value.expense {
+    color: var(--expense);
+}
+
+.summary-value.income {
+    color: var(--income);
+}
+
+/* 账单列表 */
+.record-list {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+/* 日期分组 */
+.date-group {
+    margin-bottom: 16px;
+}
+
+.date-header {
+    font-size: 14px;
+    font-weight: 500;
+    color: var(--text-secondary);
+    padding: 8px 12px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.date-total {
+    font-size: 12px;
+}
+
+/* 单条记录 */
+.record-item {
+    background: var(--card-bg);
+    border-radius: var(--border-radius);
+    padding: 16px;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+
+.record-icon {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    background: var(--background);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 20px;
+    flex-shrink: 0;
+}
+
+.record-info {
+    flex: 1;
+    min-width: 0;
+}
+
+.record-category {
+    font-size: 16px;
+    font-weight: 500;
+    color: var(--text-primary);
+    margin-bottom: 2px;
+}
+
+.record-note {
+    font-size: 13px;
+    color: var(--text-secondary);
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+.record-amount {
+    font-size: 18px;
+    font-weight: 600;
+    flex-shrink: 0;
+}
+
+.record-amount.expense {
+    color: var(--expense);
+}
+
+.record-amount.income {
+    color: var(--income);
+}
+
+.record-amount.expense::before {
+    content: '-';
+}
+
+.record-amount.income::before {
+    content: '+';
+}
+
+/* 删除按钮 */
+.record-delete {
+    background: none;
+    border: none;
+    color: var(--text-secondary);
+    font-size: 20px;
+    cursor: pointer;
+    padding: 4px;
+    opacity: 0.6;
+    transition: opacity 0.2s;
+}
+
+.record-delete:active {
+    opacity: 1;
+}
+
+/* 空状态 */
+.empty-state {
+    display: none;
+    text-align: center;
+    padding: 60px 20px;
+}
+
+.empty-state.show {
+    display: block;
+}
+
+.empty-icon {
+    font-size: 64px;
+    margin-bottom: 16px;
+    opacity: 0.5;
+}
+
+.empty-text {
+    font-size: 16px;
+    color: var(--text-secondary);
+    margin-bottom: 8px;
+}
+
+.empty-hint {
+    font-size: 14px;
+    color: var(--text-secondary);
+    opacity: 0.7;
+}
+
+/* ==================== 底部导航栏 ==================== */
+
+.app-nav {
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    height: var(--nav-height);
+    background: var(--card-bg);
+    display: flex;
+    box-shadow: 0 -2px 8px rgba(0, 0, 0, 0.08);
+    z-index: 100;
+}
+
+.nav-btn {
+    flex: 1;
+    border: none;
+    background: none;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 4px;
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+
+.nav-icon {
+    font-size: 24px;
+    opacity: 0.6;
+    transition: all 0.2s ease;
+}
+
+.nav-label {
+    font-size: 12px;
+    color: var(--text-secondary);
+    transition: all 0.2s ease;
+}
+
+.nav-btn.active .nav-icon {
+    opacity: 1;
+    transform: scale(1.1);
+}
+
+.nav-btn.active .nav-label {
+    color: var(--primary);
+    font-weight: 600;
+}
