@@ -2,7 +2,7 @@
   "name": "智能记账",
   "short_name": "记账",
   "description": "简洁高效的记账工具",
-  "start_url": "/",
+  "start_url": "/https://sakurasuking-hash.github.io/bill-for-sakurasuking/",
   "display": "standalone",
   "background_color": "#FFFFFF",
   "theme_color": "#2196F3",
