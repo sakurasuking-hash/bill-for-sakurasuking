@@ -1,6 +1,7 @@
 /* ==================== 全局变量与重置 ==================== */
 
 :root {
+    /* 颜色变量 */
     --primary: #2196F3;
     --expense: #FF5722;
     --income: #4CAF50;
@@ -10,8 +11,17 @@
     --text-secondary: #757575;
     --border: #E0E0E0;
     
+    /* 尺寸变量 */
     --header-height: 56px;
     --nav-height: 60px;
+    
+    /* ⭐ 新增：安全区域变量 */
+    --safe-area-inset-top: env(safe-area-inset-top);
+    --safe-area-inset-bottom: env(safe-area-inset-bottom);
+    
+    /* ⭐ 新增：实际的导航栏高度（包含安全区域）*/
+    --nav-height-total: calc(60px + var(--safe-area-inset-bottom));
+    
     --border-radius: 12px;
     --spacing: 16px;
 }
@@ -29,8 +39,12 @@ body {
     font-size: 16px;
     line-height: 1.5;
     -webkit-font-smoothing: antialiased;
-    padding-top: var(--header-height);
-    padding-bottom: var(--nav-height);
+    
+    /* ⭐ 修改：顶部 padding 加上安全区域 */
+    padding-top: calc(var(--header-height) + var(--safe-area-inset-top));
+    
+    /* ⭐ 修改：底部 padding 使用总高度 */
+    padding-bottom: var(--nav-height-total);
 }
 
 /* ==================== 顶部标题栏 ==================== */
@@ -47,6 +61,9 @@ body {
     justify-content: center;
     box-shadow: 0 2px 4px rgba(0, 0, 0, 0.08);
     z-index: 100;
+    
+    /* ⭐ 新增：顶部留出安全区域 */
+    padding-top: var(--safe-area-inset-top);
 }
 
 .app-header h1 {
@@ -563,11 +580,14 @@ input[type="number"] {
     bottom: 0;
     left: 0;
     right: 0;
-    height: var(--nav-height);
     background: var(--card-bg);
     display: flex;
     box-shadow: 0 -2px 8px rgba(0, 0, 0, 0.08);
     z-index: 100;
+    
+    /* ⭐ 修改：高度 + 底部 padding */
+    height: var(--nav-height);
+    padding-bottom: var(--safe-area-inset-bottom);
 }
 
 .nav-btn {
@@ -581,6 +601,9 @@ input[type="number"] {
     gap: 4px;
     cursor: pointer;
     transition: all 0.2s ease;
+    
+    /* ⭐ 新增：确保内容在 60px 高度内居中 */
+    height: var(--nav-height);
 }
 
 .nav-icon {
