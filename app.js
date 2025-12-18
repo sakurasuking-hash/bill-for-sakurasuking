@@ -51,6 +51,26 @@ document.addEventListener('DOMContentLoaded', function() {
 function checkUrlParams() {
     const params = new URLSearchParams(window.location.search);
     
+    // ⭐ 新增：优先处理快捷指令传来的原始文本
+    const rawText = params.get('text');
+    
+    if (rawText) {
+        console.log('📥 从 URL 读取原始文本:', rawText);
+        
+        const result = smartParser.parse(rawText);
+        
+        if (result.success) {
+            console.log('✅ 解析成功:', result);
+            autoFillForm(result);
+            showToast('✅ 已自动识别金额和分类，请确认后保存～');
+        } else {
+            console.log('⚠️ 解析失败，无法提取有效信息');
+        }
+        
+        return;
+    }
+    
+    // 保留原有逻辑：支持单独传参
     const amount = params.get('amount');
     if (amount) {
         document.getElementById('amount-input').value = amount;
@@ -380,42 +400,7 @@ function updateMonthlySummary() {
 
 // ==================== 模块 K：剪贴板处理 ====================
 
-async function tryReadClipboard() {
-    if (!navigator.clipboard || !navigator.clipboard.readText) {
-        console.log('⚠️ 浏览器不支持剪贴板 API');
-        return;
-    }
-    
-    try {
-        const text = await navigator.clipboard.readText();
-        
-        if (!text || text.length === 0) {
-            console.log('📋 剪贴板为空');
-            return;
-        }
-        
-        console.log('📋 读取到剪贴板内容:', text);
-        
-        const lastProcessed = localStorage.getItem('last_clipboard_text');
-        if (lastProcessed === text) {
-            console.log('⚠️ 剪贴板内容已处理过，跳过');
-            return;
-        }
-        
-        const result = smartParser.parse(text);
-        
-        if (result.success) {
-            autoFillForm(result);
-            localStorage.setItem('last_clipboard_text', text);
-            showToast('✅ 已自动识别金额和分类，请确认后保存～');
-        } else {
-            console.log('⚠️ 无法从剪贴板内容中提取有效信息');
-        }
-        
-    } catch (error) {
-        console.log('⚠️ 读取剪贴板失败:', error.message);
-    }
-}
+
 
 function autoFillForm(data) {
     if (data.type) {
