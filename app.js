@@ -468,4 +468,30 @@ if ('serviceWorker' in navigator) {
         .catch(err => console.log('❌ Service Worker 注册失败:', err));
 }
 
+// ⭐ 新增：监听内容区域滚动
+function initScrollListener() {
+    const appMain = document.querySelector('.app-main');
+    
+    appMain.addEventListener('scroll', function() {
+        const activePage = document.querySelector('.page.active');
+        
+        // 如果滚动超过 50px，认为用户在查看下方内容
+        if (appMain.scrollTop > 50) {
+            activePage.classList.add('is-scrolled');
+        } else {
+            activePage.classList.remove('is-scrolled');
+        }
+    });
+}
+
+// 在 DOMContentLoaded 中调用
+document.addEventListener('DOMContentLoaded', function() {
+    // ... 其他初始化代码
+    
+    initScrollListener();  // ⭐ 添加这一行
+    
+    console.log('✅ 应用初始化完成！');
+});
+
+
 console.log('📱 智能记账 APP - By 安然');
