@@ -75,22 +75,35 @@ body {
 /* ==================== 主内容区域 ==================== */
 
 .app-main {
-    min-height: calc(100vh - var(--header-height) - var(--nav-height));
+    /* ⭐ 关键：计算精确的可用高度 */
+    min-height: calc(
+        100vh 
+        - var(--header-height) 
+        - var(--safe-area-inset-top)
+        - var(--nav-height-total)
+    );
+    
+    /* ⭐ 关键：限制最大高度，避免超出屏幕 */
+    max-height: calc(
+        100vh 
+        - var(--header-height) 
+        - var(--safe-area-inset-top)
+        - var(--nav-height-total)
+    );
+    
+    /* ⭐ 关键：内容超出时，在内部滚动 */
+    overflow-y: auto;
+    
+    /* ⭐ 关键：隐藏横向滚动 */
+    overflow-x: hidden;
+    
+    /* 平滑滚动 */
+    scroll-behavior: smooth;
+    
+    /* WebKit 滚动优化（iOS） */
+    -webkit-overflow-scrolling: touch;
+    
     padding: var(--spacing);
-}
-
-.page {
-    display: none;
-}
-
-.page.active {
-    display: block;
-    animation: fadeIn 0.3s ease;
-}
-
-@keyframes fadeIn {
-    from { opacity: 0; transform: translateY(10px); }
-    to { opacity: 1; transform: translateY(0); }
 }
 
 /* ==================== 记账表单页 ==================== */
@@ -626,4 +639,49 @@ input[type="number"] {
 .nav-btn.active .nav-label {
     color: var(--primary);
     font-weight: 600;
+}
+
+
+/* ==================== 滚动条样式优化 ==================== */
+
+/* WebKit 浏览器（Chrome, Safari, Edge）的滚动条 */
+.app-main::-webkit-scrollbar {
+    width: 6px;  /* 滚动条宽度 */
+}
+
+.app-main::-webkit-scrollbar-track {
+    background: transparent;  /* 轨道透明 */
+}
+
+.app-main::-webkit-scrollbar-thumb {
+    background: rgba(0, 0, 0, 0.2);  /* 滑块半透明灰色 */
+    border-radius: 3px;  /* 圆角 */
+}
+
+.app-main::-webkit-scrollbar-thumb:hover {
+    background: rgba(0, 0, 0, 0.3);  /* 鼠标悬停时稍微深一点 */
+}
+
+/* iOS 中滚动条默认不显示，这些样式主要影响桌面浏览器 */
+
+/* ==================== 滚动提示 ==================== */
+
+/* 在页面底部添加渐变遮罩，提示用户"下方还有内容" */
+.page::after {
+    content: '';
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    height: 60px;
+    background: linear-gradient(to top, rgba(245, 245, 245, 1) 0%, transparent 100%);
+    pointer-events: none;  /* 不阻挡点击 */
+    opacity: 0;  /* 默认隐藏 */
+    transition: opacity 0.3s ease;
+    z-index: 50;
+}
+
+/* 当页面有滚动条时显示遮罩 */
+.page.has-scroll::after {
+    opacity: 1;
 }
