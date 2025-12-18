@@ -686,15 +686,3 @@ input[type="number"] {
     opacity: 1;
 }
 
-/* ==================== 悬浮保存按钮（可选）==================== */
-
-/* 检测滚动时，保存按钮固定在底部 */
-.page.is-scrolled .save-btn {
-    position: fixed;
-    bottom: calc(var(--nav-height-total) + 12px);
-    left: 16px;
-    right: 16px;
-    width: calc(100% - 32px);
-    z-index: 90;
-    box-shadow: 0 -2px 12px rgba(0, 0, 0, 0.15);
-}
