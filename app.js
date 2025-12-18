@@ -25,6 +25,7 @@ let currentCategory = '餐饮';
 document.addEventListener('DOMContentLoaded', function() {
     console.log('✅ 应用初始化中...');
     
+    detectEnvironment();
     renderCategories();
     checkUrlParams();
     bindEvents();
@@ -39,9 +40,8 @@ document.addEventListener('DOMContentLoaded', function() {
         });
     }
     
-    setTimeout(() => {
-        tryReadClipboard();
-    }, 500);
+    // ⭐ 新增：初始化时也检测滚动
+    checkPageScroll();
     
     console.log('✅ 应用初始化完成！');
 });
@@ -200,6 +200,30 @@ function switchPage(pageName) {
         renderRecordList();
         updateMonthlySummary();
     }
+    
+    // ⭐ 新增：检测页面是否需要滚动，决定是否显示遮罩
+    checkPageScroll();
+}
+
+// ⭐ 新增函数：检测内容是否超出
+function checkPageScroll() {
+    // 延迟执行，等待内容渲染完成
+    setTimeout(() => {
+        const appMain = document.querySelector('.app-main');
+        
+        // 判断内容高度是否超过容器高度
+        if (appMain.scrollHeight > appMain.clientHeight) {
+            // 有滚动条，显示提示遮罩
+            document.querySelectorAll('.page.active').forEach(page => {
+                page.classList.add('has-scroll');
+            });
+        } else {
+            // 没有滚动条，隐藏遮罩
+            document.querySelectorAll('.page.active').forEach(page => {
+                page.classList.remove('has-scroll');
+            });
+        }
+    }, 100);
 }
 
 // ==================== 模块 G：保存记录 ====================
